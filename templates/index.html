@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kangrui's Experience Finder</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background-color: #f4f7f6; color: #333; max-width: 800px; margin: 40px auto; padding: 20px; }
+        .container { background-color: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        h1 { color: #2c3e50; text-align: center; }
+        form { display: flex; flex-direction: column; gap: 15px; margin-bottom: 30px; }
+        .form-group { display: flex; flex-direction: column; }
+        label { margin-bottom: 5px; font-weight: bold; color: #555; }
+        input[type="text"] { padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px; }
+        button { padding: 12px 20px; background-color: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; transition: background-color 0.3s; }
+        button:hover { background-color: #2980b9; }
+        .results { margin-top: 20px; }
+        h2 { border-bottom: 2px solid #eee; padding-bottom: 10px; color: #2c3e50; }
+        h3 { color: #34495e; margin-top: 25px; }
+        .experience-list { list-style-type: none; padding-left: 0; }
+        .experience-list li { background-color: #f9f9f9; border-left: 4px solid #3498db; padding: 15px; margin-bottom: 10px; border-radius: 4px; line-height: 1.6; }
+        .related-list li { border-left-color: #f1c40f; }
+        .no-results, .error { text-align: center; color: #7f8c8d; background-color: #ecf0f1; padding: 15px; border-radius: 4px; }
+        .error { color: #c0392b; background-color: #f2dede; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Kangrui's Experience Finder 🔎</h1>
+
+        <form method="POST">
+            <div class="form-group">
+                <label for="keyword">Search for a skill or technology in my resume:</label>
+                <input type="text" id="keyword" name="keyword" placeholder="e.g., Python, Project Management" required>
+            </div>
+            <button type="submit">Search My Experience</button>
+        </form>
+
+        <div class="results">
+            {% if error %}
+                <p class="error">{{ error }}</p>
+            {% endif %}
+
+            {% if keyword %}
+                <h2>Results for "{{ keyword }}"</h2>
+                
+                <h3>Direct Experience</h3>
+                {% if exact_experiences %}
+                    <ul class="experience-list">
+                        {% for exp in exact_experiences %}<li>{{ exp }}</li>{% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="no-results">No direct experience found.</p>
+                {% endif %}
+                
+                <h3>Potential Related Experience</h3>
+                {% if related_experiences %}
+                    {% for related_word, sentences in related_experiences.items() %}
+                        <h4>Related to: "{{ related_word }}"</h4>
+                        <ul class="experience-list related-list">
+                            {% for sentence in sentences %}
+                                <li>{{ sentence }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endfor %}
+                {% else %}
+                    <p class="no-results">No related experience found.</p>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
